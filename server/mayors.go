@@ -1,7 +1,7 @@
 package server
 
 // Mayors is a list of formated mayors and their years in office
-var Mayors = []Mayor{
+var Mayors = []*Mayor{
 	{TermStart: 1819, TermEnd: 1833, Name: "Georg Jakob Heinrich Mack"},
 	{TermStart: 1833, TermEnd: 1859, Name: "Gottfried Völter"},
 	{TermStart: 1859, TermEnd: 1866, Name: "Friedrich Winter"},
