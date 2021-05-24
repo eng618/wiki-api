@@ -7,5 +7,6 @@ import (
 func main() {
 	// Create and run server
 	s := server.Server{}
+	s.Initialize()
 	s.Run(":5000")
 }

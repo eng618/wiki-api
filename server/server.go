@@ -22,7 +22,8 @@ type Server struct {
 	Negroni *negroni.Negroni
 }
 
-func (s *Server) init() {
+// Initialize prepares a server along with all middleware.
+func (s *Server) Initialize() {
 	// Initialize Routes
 	s.Router = mux.NewRouter().StrictSlash(true)
 	s.initializeRoutes()
@@ -36,7 +37,7 @@ func (s *Server) init() {
 func (s *Server) Run(addr string) {
 
 	var wait time.Duration
-	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the server gracefully wait for existing connections to finish - e.g. 15s or 1m")
+	flag.DurationVar(&wait, "graceful-timeout", time.Second*5, "the duration for which the server gracefully wait for existing connections to finish - e.g. 15s or 1m")
 	flag.Parse()
 
 	srv := &http.Server{
@@ -78,4 +79,8 @@ func (s *Server) initializeRoutes() {
 	// home
 	s.Router.HandleFunc("/", homeLink)
 	s.Router.HandleFunc("/panic", errorTest)
+
+	// Mayor
+	s.Router.HandleFunc("/mayor", getMayor).Methods("GET")
+	s.Router.HandleFunc("/mayor", getMayor).Queries("year", "^(19|20)\\d{2}$").Methods("GET")
 }
