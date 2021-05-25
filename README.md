@@ -1,4 +1,9 @@
-# Overview
+# wiki-api
+
+[![Go](https://github.com/ENG618/wiki-api/actions/workflows/go.yml/badge.svg)](https://github.com/ENG618/wiki-api/actions/workflows/go.yml)
+[![CodeQL](https://github.com/ENG618/wiki-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ENG618/wiki-api/actions/workflows/codeql-analysis.yml)
+
+## Overview
 
 This is a go package that exposes an API server that exposes the information on
 the Wikipedia page about Heidenheim, Germany
