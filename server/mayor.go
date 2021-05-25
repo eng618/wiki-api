@@ -20,12 +20,16 @@ type Mayor struct {
 	Current   bool   `json:"current"`
 }
 
+type yearCtxKey struct{}
+
 func getCurrentMayor(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	for _, m := range Mayors {
 		if m.Current {
-			json.NewEncoder(w).Encode(m)
-			return
+			if err := json.NewEncoder(w).Encode(m); err != nil {
+				log.Println("Error while encoding current mayor:", err)
+			}
+			break
 		}
 	}
 }
@@ -37,7 +41,7 @@ func getCurrentMayor(w http.ResponseWriter, r *http.Request) {
 func getMayor(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var mayors []*Mayor
-	y := r.Context().Value("year").(int)
+	y := r.Context().Value(yearCtxKey{}).(int)
 
 	for _, m := range Mayors {
 		if m.TermStart <= y && m.Current {
@@ -49,7 +53,9 @@ func getMayor(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	json.NewEncoder(w).Encode(mayors)
+	if err := json.NewEncoder(w).Encode(mayors); err != nil {
+		log.Println("Error while encoding current mayor:", err)
+	}
 }
 
 // MayorCtx is custom middleware to load a Mayor object, from the url
@@ -59,25 +65,30 @@ func MayorCtx(next http.Handler) http.Handler {
 		year, err := strconv.Atoi(y)
 		if err != nil {
 			log.Println(fmt.Errorf("An error occurred while converting string to int: %v", err))
-			render.Render(w, r, &ErrResponse{
+			err := render.Render(w, r, &ErrResponse{
 				StatusText:     "Invalid year provided",
 				HTTPStatusCode: 400,
 				ErrorText:      fmt.Sprintf("An error occurred while converting string to int: %v", err),
 			})
+			if err != nil {
+				fmt.Println("Error rendering custom error object:", err)
+			}
 			return
 		}
 		// out of bounds 1819-2020
 		if year < 1819 || year > 2020 {
-			render.Render(w, r, &ErrResponse{
+			err := render.Render(w, r, &ErrResponse{
 				StatusText:     "Please provide a year between 1819 - 2020",
 				HTTPStatusCode: 400,
-				ErrorText:      fmt.Sprintf("incorrect year was passed in: %v", year),
+				ErrorText:      fmt.Sprintf("Invalid year was passed in: %v", year),
 			})
+			if err != nil {
+				fmt.Println("Error creating custom error object:", err)
+			}
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "year", year)
+		ctx := context.WithValue(r.Context(), yearCtxKey{}, year)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
-
 }

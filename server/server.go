@@ -89,7 +89,9 @@ func (s *Server) Run(addr string) {
 
 	go func() {
 		log.Println("initiating shutdown, please wait...")
-		srv.Shutdown(ctx)
+		if err := srv.Shutdown(ctx); err != nil {
+			log.Println("Error shutting down server:", err)
+		}
 	}()
 	<-ctx.Done()
 
