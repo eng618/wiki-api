@@ -1,5 +1,8 @@
 # wiki-api
 
+**⚠️ ARCHIVED: This repository is no longer maintained and is read-only. ⚠️**
+
+
 [![Go](https://github.com/ENG618/wiki-api/actions/workflows/go.yml/badge.svg)](https://github.com/ENG618/wiki-api/actions/workflows/go.yml)
 [![CodeQL](https://github.com/ENG618/wiki-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ENG618/wiki-api/actions/workflows/codeql-analysis.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ENG618/wiki-api)](https://goreportcard.com/report/github.com/ENG618/wiki-api)
